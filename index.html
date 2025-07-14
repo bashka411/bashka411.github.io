@@ -1,62 +1,58 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Перерыв от шмали</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <title>Ебейший перерыв</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Monomakh&family=Rubik+Puddles&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Rubik+Bubbles&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Rubik+Bubbles&family=Rubik+Puddles&display=swap" rel="stylesheet">
     <style>
         body {
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            min-height: 100vh;
             margin: 0;
             background: linear-gradient(135deg, #93CB56, #059033, #7BAA47, #355A20);
             background-size: 500% 500%;
             animation: gradient 20s ease infinite;
             font-family: "Rubik Puddles", system-ui;
             color: #fff;
-            overflow: hidden;
+            overflow-x: hidden;
+            touch-action: manipulation;
         }
 
         @keyframes gradient {
-            0% {
-                background-position: 0% 50%;
-            }
-
-            50% {
-                background-position: 100% 50%;
-            }
-
-            100% {
-                background-position: 0% 50%;
-            }
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
 
         #countdown {
             text-align: center;
-            padding: 50px;
-            border-radius: 30px;
+            padding: 2rem;
+            border-radius: 1.5rem;
             position: relative;
             z-index: 2;
+            max-width: 90vw;
+            box-sizing: border-box;
         }
 
         h1 {
-            font-size: 3.5em;
-            text-shadow: 0 0 10px rgba(29, 38, 22, 0.5);
-            margin-bottom: -0.05em;
-            letter-spacing: 0.15em;
+            font-size: clamp(2rem, 3vw, 3rem);
+            text-shadow: 0 0 8px rgba(29, 38, 22, 0.5);
+            margin-bottom: 0.5rem;
+            letter-spacing: 0.1em;
         }
 
         #timer {
             display: flex;
             justify-content: center;
-            font-size: 2em;
+            flex-wrap: wrap;
+            gap: 1rem;
             font-family: "Rubik Bubbles", system-ui;
         }
 
@@ -64,38 +60,62 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 30px;
-            border-radius: 15px;
-            min-width: 100px;
+            padding: 1rem;
+            border-radius: 0.75rem;
+            min-width: 4rem;
             transition: transform 0.3s ease;
         }
 
         .value {
-            font-size: 3em;
+            font-size: clamp(1.5rem, 6vw, 2.5rem);
             font-weight: bold;
-            text-shadow: 0 0 10px rgba(29, 38, 22, 0.5);
+            text-shadow: 0 0 8px rgba(29, 38, 22, 0.5);
         }
 
         .unit {
-            font-size: 1em;
+            font-size: clamp(0.8rem, 3vw, 1rem);
             text-transform: uppercase;
-            text-shadow: 0 0 10px rgba(29, 38, 22, 0.5);
-            letter-spacing: 2px;
+            text-shadow: 0 0 8px rgba(29, 38, 22, 0.5);
+            letter-spacing: 1px;
+        }
+
+        @media (max-width: 768px) {
+            #countdown {
+                padding: 1rem;
+            }
+
+            .time-unit {
+                padding: 0.5rem;
+                min-width: 3.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                margin-bottom: 0.3rem;
+            }
+
+            #timer {
+                gap: 0.5rem;
+            }
+
+            .time-unit {
+                padding: 0.4rem;
+                min-width: 3rem;
+            }
         }
     </style>
 </head>
-
 <body>
     <div id="smoke-particles"
-        style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; filter: blur(10px);"></div>
+        style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; filter: blur(8px);"></div>
     <div id="leaf-particles" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1;"></div>
     <div id="countdown">
-        <h1>Перерыв от шмали</h1>
+        <h1>Ебейший перерыв</h1>
         <div id="timer"></div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/tsparticles@2.12.0/tsparticles.bundle.min.js"></script>
-
     <script>
         function updateCountdown() {
             const now = new Date();
@@ -105,7 +125,6 @@
             }
 
             const difference = target - now;
-
             const days = Math.floor(difference / (1000 * 60 * 60 * 24));
             const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
             const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
@@ -131,8 +150,9 @@
             `;
         }
 
+                                        const isMobile = window.innerWidth <= 768;
         tsParticles.load("smoke-particles", {
-            fpsLimit: 60,
+            fpsLimit: isMobile ? 30 : 60,
             particles: {
                 number: { value: 0 },
                 color: { value: "#ffffff" },
@@ -149,7 +169,7 @@
                     }
                 },
                 size: {
-                    value: { min: 20, max: 100 },
+                    value: { min: isMobile ? 10 : 20, max: isMobile ? 50 : 100 },
                     random: true
                 },
                 move: {
@@ -166,7 +186,7 @@
                 {
                     direction: "top",
                     position: { x: 50, y: 100 },
-                    rate: { quantity: 5, delay: 0.1 },
+                    rate: { quantity: isMobile ? 3 : 5, delay: 0.1 },
                     size: { width: 100, height: 0, mode: "percent" }
                 }
             ],
@@ -174,9 +194,9 @@
         });
 
         tsParticles.load("leaf-particles", {
-            fpsLimit: 60,
+            fpsLimit: isMobile ? 30 : 60,
             particles: {
-                number: { value: 25 },
+                number: { value: isMobile ? 15 : 25 },
                 shape: {
                     type: "image",
                     options: {
@@ -191,7 +211,7 @@
                     value: { min: 0.3, max: 0.7 }
                 },
                 size: {
-                    value: { min: 20, max: 60 },
+                    value: { min: isMobile ? 15 : 20, max: isMobile ? 40 : 60 },
                     random: true
                 },
                 move: {
@@ -207,13 +227,13 @@
                     value: { min: 0, max: 360 },
                     direction: "random",
                     animation: { enable: true, speed: 5 }
-                },
+                }
             },
             emitters: [
                 {
                     direction: "none",
                     position: { x: -10, y: 50 },
-                    rate: { quantity: 1, delay: 0.5 },
+                    rate: { quantity: isMobile ? 0.5 : 1, delay: 0.5 },
                     size: { width: 0, height: 100, mode: "percent" }
                 }
             ],
@@ -224,5 +244,4 @@
         updateCountdown();
     </script>
 </body>
-
 </html>
